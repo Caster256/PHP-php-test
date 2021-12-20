@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use App\Services\AccountService;
 
 class AccountController extends Controller
@@ -14,8 +14,25 @@ class AccountController extends Controller
         $this->account = $account;
     }
 
+    /**
+     * 首頁
+     */
     public function index()
     {
-        echo 'abc';
+        $binding = [
+            'title' => 'account list',
+            'list' => array()
+        ];
+        return view('account', $binding);
+    }
+
+    /**
+     * 處理新增與編輯
+     */
+    public function edit(Request $request): array
+    {
+        $data = $request->all();
+
+        return $this->account->CreateOrUpdate($data["values"]);
     }
 }

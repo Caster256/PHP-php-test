@@ -1,0 +1,41 @@
+@charset "utf-8";
+/* CSS Document */
+
+#successUI {
+    background: url(../images/Symbol-Check.png) 20px 50% no-repeat;
+    background-color: #000;
+}
+#update_successUI {
+    background: url(../images/Symbol-Check.png) 20px 50% no-repeat;
+    background-color: #000;
+}
+#failureUI {
+    background: url(../images/Symbol-Error.png) 20px 50% no-repeat;
+    background-color: #000;
+}
+
+div.growlUI h3, div.growlUI h4 {
+    padding: 0;
+    padding-left: 80px;
+    text-align: left;
+}
+.blockUI {
+    width:0;
+    border: 0;
+}
+.growlUI {
+    width: 250px;
+    left: 0;
+    bottom: 0;
+    border: none;
+    padding: 5px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    opacity: 0.8;
+    color: #fff;
+}
+.error {
+    color: red;
+}
+
+

@@ -17,3 +17,4 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });*/
 Route::get('/account', 'AccountController@index');
+Route::post('/account/edit', 'AccountController@edit');

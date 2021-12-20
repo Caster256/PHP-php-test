@@ -1,0 +1,19 @@
+div.l_r {
+   padding-top: 15px;
+}
+
+div#add-account-div {
+    text-align: right;
+}
+
+.required-star {
+    color: red;
+}
+
+#birthday {
+    background-color: white;
+}
+
+#birthday:hover {
+    cursor: pointer;
+}

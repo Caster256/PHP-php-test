@@ -6,15 +6,22 @@ use App\Models\Account;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class AccountRepository
+class AccountRepository implements CRUD
 {
     /**
      * 取得全部的資料
      * @return Builder[]|Collection
      */
-    public function getLists()
+    public function getLists($where = array())
     {
-        return Account::query()->get();
+        //判斷是否有需要使用 where in 條件
+        $whereIn = array_key_exists('whereIn', $where);
+
+        return Account::query()
+            ->when($whereIn, function ($query) use ($where) {
+                return $query->whereIn('id', $where["ids"]);
+            })
+            ->get();
     }
 
     /**
@@ -49,10 +56,11 @@ class AccountRepository
 
     /**
      * 刪除資料
-     * @return void
+     * @param $ids
+     * @return int
      */
-    public function deleteData($where)
+    public function deleteData($ids): int
     {
-
+        return Account::destroy($ids);
     }
 }

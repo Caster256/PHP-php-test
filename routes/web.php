@@ -18,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 });*/
 Route::get('/account', 'AccountController@index');
 Route::post('/account/edit', 'AccountController@edit');
+Route::delete('/account/delData', 'AccountController@delete');
+Route::get('/account/export/{file_name}', 'AccountController@download');
+Route::post('/account/export', 'AccountController@export');

@@ -8,10 +8,12 @@ use App\Services\AccountService;
 class AccountController extends Controller
 {
     private $account;
+    private $request;
 
-    public function __construct(AccountService $account)
+    public function __construct(AccountService $account, Request $request)
     {
         $this->account = $account;
+        $this->request = $request;
     }
 
     /**
@@ -21,18 +23,54 @@ class AccountController extends Controller
     {
         $binding = [
             'title' => 'account list',
-            'list' => array()
+            'list' => $this->account->getLists()
         ];
         return view('account', $binding);
     }
 
     /**
      * 處理新增與編輯
+     * @return array
      */
-    public function edit(Request $request): array
+    public function edit(): array
     {
-        $data = $request->all();
+        $data = $this->request->all();
 
         return $this->account->CreateOrUpdate($data["values"]);
+    }
+
+    /**
+     * 刪除資料
+     * @return array
+     */
+    public function delete(): array
+    {
+        $data = $this->request->all();
+
+        return $this->account->deleteData($data['values']);
+    }
+
+    /**
+     * 匯出檔案
+     * @return array
+     */
+    public function export(): array
+    {
+        $data = $this->request->all();
+
+        return $this->account->export($data['values']);
+    }
+
+    /**
+     * 下載檔案
+     * @param $file_name
+     * @return void
+     */
+    public function download($file_name)
+    {
+        $type = pathinfo($file_name, PATHINFO_EXTENSION);
+        $file_path = $type == 'txt' ? public_path('export') . '/' . $file_name :
+            storage_path('app') . '/' . $file_name;
+        downFile($file_path, 'account_info.' . pathinfo($file_name, PATHINFO_EXTENSION));
     }
 }

@@ -16,9 +16,6 @@
 
     <link rel="stylesheet" type="text/css" href="{{asset('css/op_block.css')}}" />
 
-    <!-- DataTables -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/DataTables/datatables.min.css') }}">
-
     @section('style')
     @show
 </head>
@@ -47,9 +44,6 @@
         @yield('content')
     </div>
 
-    <!-- 新增修改帳號的 modal -->
-    @include('Modal/account')
-
     <!-- 動作完成的 flag -->
     @include('layouts/op_block')
 
@@ -57,8 +51,6 @@
     <script src="{{ asset('js/jquery/jquery-3.6.0.min.js') }}"></script>
     <!-- bootstrap 5 -->
     <script src="{{ asset('js/bootstrap/bootstrap.bundle.js') }}"></script>
-    <!-- DataTables -->
-    <script src="{{ asset('js/DataTables/datatables.min.js') }}"></script>
     <!-- blockUI -->
     <script src="{{ asset('js/jquery/jquery.blockUI.js') }}"></script>
 

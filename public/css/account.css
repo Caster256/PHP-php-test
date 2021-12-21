@@ -2,7 +2,7 @@ div.l_r {
    padding-top: 15px;
 }
 
-div#add-account-div {
+div#btn-div {
     text-align: right;
 }
 
@@ -15,5 +15,13 @@ div#add-account-div {
 }
 
 #birthday:hover {
+    cursor: pointer;
+}
+
+table#account-info-tab {
+    text-align: center;
+}
+
+table#account-info-tab tbody tr:hover {
     cursor: pointer;
 }

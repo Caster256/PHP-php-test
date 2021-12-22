@@ -77,5 +77,6 @@
     <script src="{{ asset('js/jquery/jquery.validate.js') }}"></script>
     <script src="{{ asset('js/bootstrap/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('packages/DataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/ajaxObject.js') }}"></script>
     <script src="{{ asset('js/account.js') }}"></script>
 @stop

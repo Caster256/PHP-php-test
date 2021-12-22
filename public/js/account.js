@@ -13,6 +13,8 @@ let data_id = '';
 let selected_id = new Set();
 //匯入資料的 form
 let formData;
+//實體化物件
+let api = new Ajax();
 
 $(function () {
     //入口
@@ -151,31 +153,18 @@ const eventBinding = () => {
         export_modal.toggle();
         $.blockUI({message: $("#wait")});
 
-        $.ajax({
-            type: 'post',
-            url: 'account/export',
-            data: {values: values},
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (data) {
-                //關掉等待 gif
-                $.unblockUI();
+        let path = 'account/export';
+        let type = 'post';
 
-                if(data['status'] === 'success') {
-                    //下載檔案
-                    document.location.href = 'account/export/' + data['file_name'];
-                } else {
-                    alert(data['msg']);
-                }
-            },
-            error: function () {
-                //關掉等待 gif
-                $.unblockUI();
-                alert('server error!');
+        let data = api.callApi(path, type, values, true);
+        if(data !== '') {
+            if(data['status'] === 'success') {
+                //下載檔案
+                document.location.href = 'account/export/' + data['file_name'];
+            } else {
+                alert(data['msg']);
             }
-        });
+        }
     });
 
     //按下匯入按鈕
@@ -359,46 +348,33 @@ const enableDelBtn = () => {
 const deleteData = () => {
     let values = Array.from(selected_id);
 
-    $.ajax({
-        type:'delete',
-        url:'account/delData',
-        data: {values: values},
-        dataType:'json',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success:function(data) {
-            //關掉等待 gif
-            $.unblockUI();
+    let path = 'account/delData';
+    let type = 'delete';
 
-            if(data["status"] === "success") {
-                //顯示成功的提示
-                $.blockUI({
-                    message: $("#successUI"),
-                    timeout: 1500,
-                    theme: true
-                });
+    let data = api.callApi(path, type, values, true);
+    if(data !== '') {
+        if(data["status"] === "success") {
+            //顯示成功的提示
+            $.blockUI({
+                message: $("#successUI"),
+                timeout: 1500,
+                theme: true
+            });
 
-                //等待 1.5 秒重新整理
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                $.blockUI({
-                    message: $("#failureUI"),
-                    timeout: 1500,
-                    theme: true
-                });
+            //等待 1.5 秒重新整理
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            $.blockUI({
+                message: $("#failureUI"),
+                timeout: 1500,
+                theme: true
+            });
 
-                alert(data["msg"]);
-            }
-        },
-        error: function () {
-            //關掉等待 gif
-            $.unblockUI();
-            alert('server error!');
+            alert(data["msg"]);
         }
-    });
+    }
 };
 
 /**
@@ -441,53 +417,39 @@ const formValidate = () => {
                 values["data_id"] = data_id;
             }
 
+            let submit_btn = $('#submit');
             //防止使用者多按
-            $('#submit').attr('disabled', 'disabled');
+            submit_btn.attr('disabled', 'disabled');
 
-            //送出表單資料
-            $.ajax({
-                url: $('#edit-form').attr('action'),
-                type: 'post',
-                data: {
-                    values: values
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                dataType: 'json',
-                success: function (data) {
-                    //關掉等待 gif
-                    $.unblockUI();
+            let path = $('#edit-form').attr('action');
+            let type = 'post';
 
-                    if(data["status"] === "success") {
-                        //顯示成功的提示
-                        $.blockUI({
-                            message: $("#successUI"),
-                            timeout: 1000,
-                            theme: true
-                        });
+            //呼叫 api 取得資料
+            let data = api.callApi(path, type, values, true);
+            if(data !== '') {
+                if(data["status"] === "success") {
+                    //顯示成功的提示
+                    $.blockUI({
+                        message: $("#successUI"),
+                        timeout: 1000,
+                        theme: true
+                    });
 
-                        //等待 1 秒重新整理
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
-                    } else {
-                        $.blockUI({
-                            message: $("#failureUI"),
-                            timeout: 1500,
-                            theme: true
-                        });
+                    //等待 1 秒重新整理
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    $.blockUI({
+                        message: $("#failureUI"),
+                        timeout: 1500,
+                        theme: true
+                    });
 
-                        alert(data["msg"]);
-                        $('#submit').removeAttr('disabled');
-                    }
-                },
-                error: function () {
-                    //關掉等待 gif
-                    $.unblockUI();
-                    alert('server error!');
+                    alert(data["msg"]);
+                    submit_btn.removeAttr('disabled');
                 }
-            });
+            }
         }
     });
 

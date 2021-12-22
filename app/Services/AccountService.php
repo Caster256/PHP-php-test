@@ -195,8 +195,6 @@ class AccountService
                 //資料處理
                 if($key == 'gender') {
                     $value = getGender($value);
-                } else if($key == 'birthday') {
-                    $value = getDate4View($value);
                 }
 
                 $arr[$idx][] = $value;
@@ -298,7 +296,11 @@ class AccountService
                         $value = getGender($value);
                         break;
                     case "birthday":
-                        $value = Date::excelToDateTimeObject($value)->format('Y-m-d');
+                        if(is_numeric($value)) {
+                            $value = Date::excelToDateTimeObject($value)->format('Y-m-d');
+                        } else {
+                            $value = date("Y-m-d", strtotime($value));
+                        }
                         break;
                     default:
                         break;

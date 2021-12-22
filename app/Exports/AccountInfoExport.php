@@ -4,8 +4,10 @@ namespace App\Exports;
 
 //use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromArray;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class AccountInfoExport implements FromArray
+class AccountInfoExport implements FromArray, WithColumnFormatting
 {
     protected $account_info;
 
@@ -17,5 +19,15 @@ class AccountInfoExport implements FromArray
     public function array(): array
     {
         return $this->account_info;
+    }
+
+    /**
+     * @return array
+     */
+    public function columnFormats(): array
+    {
+        return [
+            'D' => NumberFormat::FORMAT_DATE_YYYYMMDD
+        ];
     }
 }

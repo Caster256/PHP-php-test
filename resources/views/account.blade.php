@@ -24,6 +24,7 @@
             <table class="table table-hover" id="account-info-tab">
                 <thead>
                     <tr>
+                        <th></th>
                         <th style="width: 4%;">
                             <label>
                                 <input type="checkbox" class="form-check-input" id="del-all-account-info" />
@@ -40,6 +41,7 @@
                 <tbody>
                     @foreach($list as $item)
                         <tr class="account-info-tr" data-id="{{ $item['id'] }}">
+                            <td></td>
                             <td>
                                 <label>
                                     <input type="checkbox" class="form-check-input" name="del-account-info" />
@@ -66,6 +68,8 @@
     @include('Modal/account')
     <!-- 匯出的 modal -->
     @include('Modal/export')
+    <!-- 匯入的 modal -->
+    @include('Modal/import')
 @stop
 
 @section('script')

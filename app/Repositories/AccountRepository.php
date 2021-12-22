@@ -47,11 +47,22 @@ class AccountRepository implements CRUD
      * 更新資料
      * @param $where
      * @param $data
-     * @return bool
+     * @return int
      */
-    public function updateData($where, $data): bool
+    public function updateData($where, $data): int
     {
         return Account::query()->where($where)->update($data);
+    }
+
+    /**
+     * 新增或更新
+     * @param $key
+     * @param $data
+     * @return mixed
+     */
+    public function createOrUpdateData($key, $data)
+    {
+        return Account::updateOrCreate($key, $data);
     }
 
     /**

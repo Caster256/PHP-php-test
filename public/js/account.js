@@ -1,14 +1,18 @@
 //modal dom
 const account_modal_dom = document.getElementById('accountModal');
 const export_modal_dom = document.getElementById('exportModal');
+const import_modal_dom = document.getElementById('importModal');
 //註冊 modal 物件
 const account_modal = new bootstrap.Modal(account_modal_dom);
 const export_modal = new bootstrap.Modal(export_modal_dom);
+const import_modal = new bootstrap.Modal(import_modal_dom);
 
 //需更新資料的 id
 let data_id = '';
 //被選取的資料 id
 let selected_id = new Set();
+//匯入資料的 form
+let formData;
 
 $(function () {
     //入口
@@ -143,6 +147,8 @@ const eventBinding = () => {
         //取得匯出檔案的類型
         values["type"] = $(this).attr('data-type');
 
+        //關閉 modal
+        export_modal.toggle();
         $.blockUI({message: $("#wait")});
 
         $.ajax({
@@ -158,8 +164,6 @@ const eventBinding = () => {
                 $.unblockUI();
 
                 if(data['status'] === 'success') {
-                    //關閉 modal
-                    export_modal.toggle();
                     //下載檔案
                     document.location.href = 'account/export/' + data['file_name'];
                 } else {
@@ -173,7 +177,120 @@ const eventBinding = () => {
             }
         });
     });
+
+    //按下匯入按鈕
+    $("#import-btn").on('click', function () {
+        //開啟 modal
+        import_modal.toggle();
+    });
+
+    //上傳檔案
+    $("#fileMultiple").on("change", function() {
+        // 可接受的附檔名
+        let validExts = $(this).attr('accept').split(',');
+        // let validExts = [".xls", ".xlsx", ".csv"];
+        let fileExt = $(this).val();
+        fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+
+        //判斷檔案格式是否正確
+        if (validExts.indexOf(fileExt) < 0) {
+            alert("檔案類型錯誤，可接受的副檔名有：" + validExts.toString());
+            return false;
+        } else {
+            //顯示上傳的檔案名稱
+            let li = '';
+
+            let import_file_ul = $("#import_file_ul");
+
+            //清空 ul
+            import_file_ul.empty();
+
+            if(this.files && this.files[0]) {
+                //上傳檔案
+                formData = new FormData();
+
+                //formData.append('file', this.files[0]);
+                for (let i = 0; i < this.files.length; i++) {
+                    formData.append("file" + i, this.files[i]);
+
+                    li += '<li>' + this.files[i].name + '</li>';
+                }
+                import_file_ul.append(li);
+
+                $('#import_checked').removeAttr("disabled");
+            }
+        }
+    });
+
+    //按下匯入的確認鍵
+    $("#import_checked").on("click", function () {
+        //關閉 modal
+        import_modal.toggle();
+        $.blockUI({message: $("#wait")});
+
+        $.ajax({
+            url: 'account/import',
+            type: "POST",
+            data: formData,
+            //必須false才會自動加上正確的 Content-Type
+            contentType: false,
+            //必須false才會避開 jQuery 對 form data 的默認處理
+            //XMLHttpRequest 會對 form data 進行正確的處理
+            processData: false,
+            dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (data) {
+                $.unblockUI();
+
+                if(data["status"] === "success") {
+                    //顯示成功的提示
+                    $.blockUI({
+                        message: $("#successUI"),
+                        timeout: 1000,
+                        theme: true
+                    });
+
+                    //等待 1 秒重新整理
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    $.blockUI({
+                        message: $("#failureUI"),
+                        timeout: 1500,
+                        theme: true
+                    });
+
+                    alert(data["msg"]);
+                }
+            },
+            error: function () {
+                $.unblockUI();
+                alert("import error!");
+            }
+        });
+    });
 };
+
+/**
+ * 檢查上傳的檔案格式是否正確
+ * @param sender
+ * @returns {boolean}
+ */
+const checkfile = (sender) => {
+    // 可接受的附檔名
+    let validExts = $('#fileMultiple').attr('accept').split(',');
+    // let validExts = [".xls", ".xlsx", ".csv"];
+    let fileExt = sender.value;
+    fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+    if (validExts.indexOf(fileExt) < 0) {
+        alert("檔案類型錯誤，可接受的副檔名有：" + validExts.toString());
+        sender.value = null;
+        return false;
+    } else return true;
+}
 
 /**
  * 初始化日期
@@ -212,10 +329,10 @@ const dataTablesInit = () => {
         //設定顯示的數量
         "lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "All"]],
         //預設排序
-        order: [[1, 'asc']],
+        order: [[2, 'asc']],
         //禁止排序
         columnDefs: [{
-            targets: [0],
+            targets: [0, 1],
             orderable: false,
         }]
     });
@@ -346,14 +463,14 @@ const formValidate = () => {
                         //顯示成功的提示
                         $.blockUI({
                             message: $("#successUI"),
-                            timeout: 1500,
+                            timeout: 1000,
                             theme: true
                         });
 
-                        //等待 1.5 秒重新整理
+                        //等待 1 秒重新整理
                         setTimeout(() => {
                             window.location.reload();
-                        }, 1500);
+                        }, 1000);
                     } else {
                         $.blockUI({
                             message: $("#failureUI"),

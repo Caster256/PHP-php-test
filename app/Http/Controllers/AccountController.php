@@ -51,7 +51,7 @@ class AccountController extends Controller
     }
 
     /**
-     * 匯出檔案
+     * 匯出檔案-儲存落地檔，並回傳檔名
      * @return array
      */
     public function export(): array
@@ -71,6 +71,17 @@ class AccountController extends Controller
         $type = pathinfo($file_name, PATHINFO_EXTENSION);
         $file_path = $type == 'txt' ? public_path('export') . '/' . $file_name :
             storage_path('app') . '/' . $file_name;
-        downFile($file_path, 'account_info.' . pathinfo($file_name, PATHINFO_EXTENSION));
+        downFile($file_path, 'account_info.' . $type);
+    }
+
+    /**
+     * 匯入檔案
+     * @return array
+     */
+    public function import(): array
+    {
+        $files = $this->request->file();
+
+        return $this->account->import($files);
     }
 }

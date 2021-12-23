@@ -25,8 +25,6 @@ $(function () {
  * 程式入口
  */
 const process = () => {
-    //$("#remark").flexible();
-
     //觸發事件
     eventBinding();
 
@@ -153,18 +151,10 @@ const eventBinding = () => {
         export_modal.toggle();
         $.blockUI({message: $("#wait")});
 
+        //呼叫 api
         let path = 'account/export';
         let type = 'post';
-
-        let data = api.callApi(path, type, values, true);
-        if(data !== '') {
-            if(data['status'] === 'success') {
-                //下載檔案
-                document.location.href = 'account/export/' + data['file_name'];
-            } else {
-                alert(data['msg']);
-            }
-        }
+        api.callApi(path, type, values, true);
     });
 
     //按下匯入按鈕
@@ -348,33 +338,10 @@ const enableDelBtn = () => {
 const deleteData = () => {
     let values = Array.from(selected_id);
 
+    //呼叫 api
     let path = 'account/delData';
     let type = 'delete';
-
-    let data = api.callApi(path, type, values, true);
-    if(data !== '') {
-        if(data["status"] === "success") {
-            //顯示成功的提示
-            $.blockUI({
-                message: $("#successUI"),
-                timeout: 1500,
-                theme: true
-            });
-
-            //等待 1.5 秒重新整理
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
-        } else {
-            $.blockUI({
-                message: $("#failureUI"),
-                timeout: 1500,
-                theme: true
-            });
-
-            alert(data["msg"]);
-        }
-    }
+    api.callApi(path, type, values, true);
 };
 
 /**
@@ -417,39 +384,13 @@ const formValidate = () => {
                 values["data_id"] = data_id;
             }
 
-            let submit_btn = $('#submit');
             //防止使用者多按
-            submit_btn.attr('disabled', 'disabled');
+            $('#submit').attr('disabled', 'disabled');
 
+            //呼叫 api
             let path = $('#edit-form').attr('action');
             let type = 'post';
-
-            //呼叫 api 取得資料
-            let data = api.callApi(path, type, values, true);
-            if(data !== '') {
-                if(data["status"] === "success") {
-                    //顯示成功的提示
-                    $.blockUI({
-                        message: $("#successUI"),
-                        timeout: 1000,
-                        theme: true
-                    });
-
-                    //等待 1 秒重新整理
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    $.blockUI({
-                        message: $("#failureUI"),
-                        timeout: 1500,
-                        theme: true
-                    });
-
-                    alert(data["msg"]);
-                    submit_btn.removeAttr('disabled');
-                }
-            }
+            api.callApi(path, type, values, true);
         }
     });
 

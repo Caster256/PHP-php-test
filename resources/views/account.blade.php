@@ -65,9 +65,11 @@
                             <td class="td-email data-row">{{ $item['email'] }}</td>
                             <td class="td-remark data-row">{{ $item['remark'] }}</td>
                             <td>
-                                <button type="button" class="btn btn-danger del-btn">
-                                    <i class="far fa-trash-alt"></i> 刪除
-                                </button>
+                                <i class="far fa-edit data-row" style="margin-right: 10px;"></i>
+                                <i class="far fa-trash-alt del-btn" style="color: red;"></i>
+                                {{--<button type="button" class="btn btn-danger del-btn">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>--}}
                             </td>
                         </tr>
                     @endforeach

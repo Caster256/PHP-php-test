@@ -7,6 +7,8 @@ const account_modal = new bootstrap.Modal(account_modal_dom);
 const export_modal = new bootstrap.Modal(export_modal_dom);
 const import_modal = new bootstrap.Modal(import_modal_dom);
 
+//表單驗證
+let validate;
 //需更新資料的 id
 let data_id = '';
 //被選取的資料 id
@@ -42,10 +44,22 @@ const process = () => {
  * 觸發事件
  */
 const eventBinding = () => {
+    let account_tab =  $('#account-info-tab');
+
     //關閉 modal 時要做的事
     account_modal_dom.addEventListener('hidden.bs.modal', function () {
         //重置表單
         formReset();
+    });
+
+    $("#birthday").on('change', function () {
+        if($(this).val() !== '') {
+            $("#birthday-error").hide();
+            $(this).removeClass('error');
+        } else {
+            $("#birthday-error").show().text('請選擇生日!');
+            $(this).addClass('error');
+        }
     });
 
     //按下新增按鈕開啟 modal
@@ -59,8 +73,14 @@ const eventBinding = () => {
     });
 
     //點選清單的資料進行編輯
-    $('.data-row').on('click', function () {
+    account_tab.on('click', '.data-row', function () {
         let tr = $(this).closest('tr');
+
+        //DataTables RWD 的樣式會撤換整個 html 的位置，所以要判斷如果抓不到，則往上一個 tr 找
+        if(tr.attr('data-id') === undefined) {
+            tr = tr.prev('tr');
+        }
+
         data_id = parseInt(tr.attr('data-id'));
 
         //將資料寫入 modal 上
@@ -137,12 +157,15 @@ const eventBinding = () => {
     });
 
     //按下刪除按鈕
-    $('.del-btn').on('click', function() {
+    account_tab.on('click', '.del-btn', function() {
         if(confirm('確定要刪除這筆資料?')) {
             $.blockUI({message: $("#wait")});
 
             //取得要刪除的資料
-            let values = [$(this).closest('tr').attr('data-id')];
+            let id = $(this).closest('tr').attr('data-id');
+            //DataTables RWD 的樣式會撤換整個 html 的位置，所以要判斷如果抓不到，則往上一個 tr 找
+            if(id === undefined) { id = $(this).closest('tr').prev('tr').attr('data-id'); }
+            let values = [id];
             deleteData(values);
         }
     });
@@ -301,13 +324,16 @@ const initDate = () => {
  * 重置表單
  */
 const formReset = () => {
-    const form = $("#edit-form");
+    //清除驗證
+    validate.resetForm();
 
-    form[0].reset();
-    form.find('label.error').remove();
-    form.find('.error').removeClass('error');
+    //還原預設值
+    $("#edit-form")[0].reset();
     $(":radio[value=0]").removeAttr('checked');
     $(":radio[value=1]").attr('checked', 'checked');
+
+    //清空需更新資料的 id
+    data_id = '';
 };
 
 /**
@@ -377,7 +403,7 @@ const deleteData = (values) => {
  */
 const formValidate = () => {
     //驗證表單
-    $("#edit-form").validate({
+    validate = $("#edit-form").validate({
         ignore: ''
         , rules: {
             account: {
@@ -385,6 +411,17 @@ const formValidate = () => {
             },
             email: {
                 email: true
+            }
+        }
+        , messages: {
+            account: {
+                required: '請輸入帳號!'
+            },
+            username: '請輸入姓名!',
+            birthday: '請選擇生日!',
+            email: {
+                required: '請輸入信箱!',
+                email: '信箱的格式有誤!'
             }
         }
         , errorPlacement: function(error, element) {
@@ -427,7 +464,7 @@ const formValidate = () => {
         //設定只能輸入英數字
         let account_regex =  /^((?=.*[0-9])(?=.*[a-z|A-Z]))^.*$/;
         return this.optional(element)||(account_regex.test(value));
-    },"請輸入英數字！");
+    },"請輸入英文 + 數字！");
 };
 
 //# sourceURL=account.js

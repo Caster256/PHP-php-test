@@ -49,11 +49,11 @@
                             </label><br />
                             <label>
                                 <input type="radio" class="form-check-input"
-                                       value="1" name="gender" checked />男
+                                       value="1" name="gender" checked /> 男
                             </label>
                             <label>
                                 <input type="radio" class="form-check-input"
-                                       value="0" name="gender" />女
+                                       value="0" name="gender" /> 女
                             </label>
                         </div>
                         <div class="col-md-6">

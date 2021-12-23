@@ -20,6 +20,7 @@ div#btn-div {
 
 table#account-info-tab {
     text-align: center;
+    width: 100% !important;
 }
 
 table#account-info-tab tbody tr:hover {

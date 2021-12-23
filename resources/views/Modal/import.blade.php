@@ -30,8 +30,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="import_checked" disabled>確定</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button type="button" class="btn btn-primary" id="import_checked" disabled>
+                    <i class="fas fa-check"></i> 確定
+                </button>
             </div>
         </div>
     </div>

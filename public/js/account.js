@@ -125,12 +125,25 @@ const eventBinding = () => {
         enableDelBtn();
     });
 
-    //按下刪除按鈕
-    $('.del-btn').on('click', function () {
+    //按下批次刪除按鈕
+    $('#del-btn').on('click', function () {
         if(confirm('確定要刪除 ' + selected_id.size + ' 筆資料?')) {
             $.blockUI({message: $("#wait")});
 
-            deleteData();
+            //整理出要批次刪除的資料
+            let values = Array.from(selected_id);
+            deleteData(values);
+        }
+    });
+
+    //按下刪除按鈕
+    $('.del-btn').on('click', function() {
+        if(confirm('確定要刪除這筆資料?')) {
+            $.blockUI({message: $("#wait")});
+
+            //取得要刪除的資料
+            let values = [$(this).closest('tr').attr('data-id')];
+            deleteData(values);
         }
     });
 
@@ -306,14 +319,30 @@ const dataTablesInit = () => {
         //啟用排序
         ordering: true,
         //設定顯示的數量
-        "lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "All"]],
+        "lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "全部"]],
         //預設排序
         order: [[2, 'asc']],
         //禁止排序
         columnDefs: [{
-            targets: [0, 1],
+            targets: [0, 1, 8],
             orderable: false,
-        }]
+        }],
+        language:{
+            //左下角的文字
+            sInfo: '顯示第 _START_ 至 _END_ 筆,共 _TOTAL_ 筆',
+            sInfoEmpty: '顯示第 0 至 0 筆,共 0 筆',
+            //沒資料時中間顯示的文字
+            emptyTable: '尚無資料',
+            //右上角的搜尋文字
+            search: '搜尋:',
+            //右下角的換頁
+            paginate: {
+                'next': '>',
+                'previous': '<'
+            },
+            //切換筆數的文字
+            lengthMenu: '一次顯示 _MENU_ 筆資料'
+        }
     });
 };
 
@@ -321,7 +350,7 @@ const dataTablesInit = () => {
  * 判斷是否啟用刪除按鈕
  */
 const enableDelBtn = () => {
-    let del_btn = $('.del-btn');
+    let del_btn = $('#del-btn');
 
     //若 selected_id 有值就開放刪除按鈕
     if(selected_id.size > 0) {
@@ -334,10 +363,9 @@ const enableDelBtn = () => {
 
 /**
  * 刪除資料
+ * @param values
  */
-const deleteData = () => {
-    let values = Array.from(selected_id);
-
+const deleteData = (values) => {
     //呼叫 api
     let path = 'account/delData';
     let type = 'delete';

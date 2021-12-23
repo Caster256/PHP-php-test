@@ -8,15 +8,21 @@
 
 @section('content')
     <div class="row l_r">
-        <div class="col-4">
-            <button type="button" class="btn btn-danger del-btn" disabled>
-                刪除
+        <div class="col-6">
+            <button type="button" class="btn btn-primary" id="add-account-btn">
+                <i class="fas fa-plus"></i> 新增
+            </button>
+            <button type="button" class="btn btn-danger" id="del-btn" disabled>
+                <i class="far fa-trash-alt"></i> 批次刪除
             </button>
         </div>
-        <div class="col-8" id="btn-div">
-            <button type="button" class="btn btn-primary" id="add-account-btn">新增</button>
-            <button type="button" class="btn btn-success" id="import-btn">匯入</button>
-            <button type="button" class="btn btn-success" id="export-btn">匯出</button>
+        <div class="col-6" id="btn-div">
+            <button type="button" class="btn btn-success" id="import-btn">
+                <i class="fal fa-file-import"></i> 匯入
+            </button>
+            <button type="button" class="btn btn-success" id="export-btn">
+                <i class="fal fa-file-export"></i> 匯出
+            </button>
         </div>
     </div>
     <div class="row l_r">
@@ -36,6 +42,7 @@
                         <th>生日</th>
                         <th>信箱</th>
                         <th>備註</th>
+                        <th style="width: 8%;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +64,11 @@
                             </td>
                             <td class="td-email data-row">{{ $item['email'] }}</td>
                             <td class="td-remark data-row">{{ $item['remark'] }}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger del-btn">
+                                    <i class="far fa-trash-alt"></i> 刪除
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

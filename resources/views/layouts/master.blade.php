@@ -14,7 +14,13 @@
     <!-- bootstrap 5 -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap/bootstrap.min.css') }}">
 
+    <!-- blockUI 訊息內容 -->
     <link rel="stylesheet" type="text/css" href="{{asset('css/op_block.css')}}" />
+
+    <!-- icon -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+          crossorigin="anonymous"/>
 
     @section('style')
     @show
@@ -23,7 +29,7 @@
     <!-- 導覽列 -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">後台管理</a>
+            <a class="navbar-brand" href="#"><b>後台管理</b></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
                     aria-expanded="false" aria-label="Toggle navigation">

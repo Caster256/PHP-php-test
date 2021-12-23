@@ -53,6 +53,7 @@ const eventBinding = () => {
     });
 
     $("#birthday").on('change', function () {
+        //由於 jquery 的驗證無法針對日期選擇做判斷，所以暫定先手動判斷
         if($(this).val() !== '') {
             $("#birthday-error").hide();
             $(this).removeClass('error');

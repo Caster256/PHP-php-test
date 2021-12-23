@@ -65,6 +65,8 @@ const eventBinding = () => {
 
     //按下新增按鈕開啟 modal
     $('#add-account-btn').on('click', function () {
+        //修改 modal 的 title
+        $("#accountModalLabel").text('新增帳號');
         account_modal.toggle();
     });
 
@@ -81,6 +83,9 @@ const eventBinding = () => {
         if(tr.attr('data-id') === undefined) {
             tr = tr.prev('tr');
         }
+
+        //修改 modal 的 title
+        $("#accountModalLabel").text('修改帳號');
 
         data_id = parseInt(tr.attr('data-id'));
 
@@ -408,9 +413,17 @@ const formValidate = () => {
         ignore: ''
         , rules: {
             account: {
+                required: true,
                 accountRegex: true
             },
+            username: {
+                required: true
+            },
+            birthday: {
+                required: true
+            },
             email: {
+                required: true,
                 email: true
             }
         }
